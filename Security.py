@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import re
 
 #####################  READ ME  ###########################
 # This is practice for a Security Engineer Google Interview
