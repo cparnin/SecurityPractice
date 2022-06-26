@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import re
 
 #####################  READ ME  ###########################
 # This is practice for a Security Engineer Google Interview
@@ -13,7 +13,6 @@
 print("\n\nHello, this is my brush up and practice arena\n\n")
 name = input("What's your name? ")
 
-
 #----------------------- FUNCTION DECLARATIONS -----------------------
 
 # Feelings function: Text to emojis
@@ -25,7 +24,6 @@ def feelings():
 	# split on the space
 	words = message.split(' ')
 	print("Printing word list")
-	print(words)
 	# emoji dictionary
 	emojis = {
 		"happy":"😀",
@@ -74,9 +72,25 @@ def ciphers():
 
 #-----------------------
 
-print("Do you want to talk about feelings or ciphers?")
+# Parsing logs function
+
+def logs():
+	print("Lets parse the /var/log/system.log on a Mac")
+	f = open('/var/log/system.log')
+	lines = f.readlines()
+	for line in lines:
+		if "error" in line:
+			x = line.split("Function:")
+			print(line.split()[0],line.split()[1],line.split()[3], " Error message: ", x[1])
+	f.close()
+
+#-----------------------
+
+print("Do you want to talk about feelings, ciphers, or logs?")
 answer=input("")
 if answer == "feelings":
 	feelings()
 elif answer == "ciphers":
 	ciphers()
+elif answer == "logs":
+	logs()
