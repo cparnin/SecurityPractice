@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+from distutils.command.install_lib import PYTHON_SOURCE_EXTENSION
+import re
+from urllib.request import urlopen
+
 #####################  READ ME  ###########################
 # This is practice for a Security Engineer Google Interview
 # Based on Grace Nolan's GitHub Page
@@ -77,6 +81,7 @@ def logs():
 	print("Lets parse the /var/log/system.log on a Mac")
 	f = open('/var/log/system.log')
 	lines = f.readlines()
+	print(lines)
 	for line in lines:
 		if "error" in line:
 			x = line.split("Function:")
@@ -85,11 +90,48 @@ def logs():
 
 #-----------------------
 
-print("Do you want to talk about feelings, ciphers, or logs?")
-answer=input("")
-if answer == "feelings":
-	feelings()
-elif answer == "ciphers":
-	ciphers()
-elif answer == "logs":
-	logs()
+# Web scraping function
+def scraping():
+	url = "https://dvwa.co.uk/"
+	# open the URL
+	page = urlopen(url) # Class type: http.client.HTTPResponse
+	# read the bytes (text, newlines, img srcs, etc)
+	html = page.read().decode("utf-8") # Class type: bytes (read) -> str (utf)
+
+	'''
+	# Manual title findin'
+	index after <title>
+	start_index = html.find("<title>") + len("<title>") # or 7
+	print("Starting index of real title (after <title>) " + str(start_index))
+	# ending
+	end_index = html.find("</title>")
+	print("Index at end of title " + str(end_index))
+	print("Length of title is: " + str(end_index-start_index))
+	# print title
+	print("Title: " + str(html[start_index:end_index]))
+	'''
+
+	# find the title
+	# match any text after <title, up to >
+	pattern = "<title.*?>.*?</title.*?>"
+	match_results = re.search(pattern, html, re.IGNORECASE)
+	title = match_results.group() # give us the most relevant choice (usually what we want)
+	title = re.sub("<.*?>", "", title) # sub tags with empty
+	print(title)
+
+
+#-----------------------
+
+# Main
+
+if __name__ == "__main__":
+	print("Do you want to talk about feelings, ciphers, logs, or scraping?")
+	answer=input("")
+	if answer == "feelings":
+		feelings()
+	elif answer == "ciphers":
+		ciphers()
+	elif answer == "logs":
+		logs()
+	elif answer == "scraping":
+		scraping()
