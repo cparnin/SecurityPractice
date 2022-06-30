@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 
-from distutils.command.install_lib import PYTHON_SOURCE_EXTENSION
-import re
 from urllib.request import urlopen
+import re
+import socket, subprocess, sys # port scanning
+import pyfiglet  # pretty output
+from datetime import datetime
 
 #####################  READ ME  ###########################
-# This is practice for a Security Engineer Google Interview
-# Based on Grace Nolan's GitHub Page
-# I simply made each topic into functions
+# Security Engineer Playground
+# Each topic is a function
 # Choose a function to begin
-# Comments preceed the line they're referring to
 ############################################################  
 
-
-print("\n\nHello, this is my brush up and practice arena\n\n")
+print("\n\nHello, this is my practice arena\n\n")
 name = input("What's your name? ")
 
 #----------------------- FUNCTION DECLARATIONS -----------------------
@@ -116,8 +115,68 @@ def scraping():
 	pattern = "<title.*?>.*?</title.*?>"
 	match_results = re.search(pattern, html, re.IGNORECASE)
 	title = match_results.group() # give us the most relevant choice (usually what we want)
-	title = re.sub("<.*?>", "", title) # sub tags with empty
+	title = re.sub("<.*?>", "", title) # sub tags with empty str
 	print(title)
+
+#-----------------------
+
+# Port Scanning function
+def ports():
+	banner = pyfiglet.figlet_format("PORT SCANNER")
+	print(banner)
+
+	target = "T76W9XCDR6.local"
+	
+	# banner
+	print("-" * 50)
+	print("Scanning target: " + target)
+	print("Scan started at: " + str(datetime.now()))
+	print("-" * 50)
+
+	try:
+		for port in range(1,100):
+			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # opening a IPv4, TCP socket
+			socket.setdefaulttimeout(.5)
+			result = s.connect_ex((target,port)) # connect to the port
+			if result == 0: # 0 is open
+				print("Port {} is open".format(port))
+			s.close()
+	except KeyboardInterrupt:
+		sys.exit("Ctrl-C entered")
+	except socket.gaierror: # get address info error
+		print("Hostname can't be resolved.  Exiting")
+	except socket.error:
+		sys.exit("Can't connect to server")
+	
+	'''
+	#OLD
+	t1 = datetime.now()
+	#server = input("Enter a host to scan (FQDN): ")
+	server = "T76W9XCDR6.local"
+	ip = socket.gethostbyname(server)
+	try:
+		for port in range (79,81):
+			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # opening a IPv4, TCP socket
+			result = sock.connect_ex((server, port)) # connect to the server port
+			if result ==0:
+				print("Port {}: Open".format(port))
+			sock.close()
+	except KeyboardInterrupt:
+		sys.exit("Ctrl-C entered")
+	except socket.gaierror: # get address info error
+		print("Hostname can't be resolved.  Exiting")
+	except socket.error:
+		sys.exit("Can't connect to server")
+	t2 = datetime.now()
+	t_total = t2-t1
+	print("Hostname: " + server + "\nIP: " + ip + "\nTime to scan: " + str(t_total))
+	'''
+
+#-----------------------
+
+# Botnet function
+def botnets():
+	
 
 
 #-----------------------
@@ -125,7 +184,8 @@ def scraping():
 # Main
 
 if __name__ == "__main__":
-	print("Do you want to talk about feelings, ciphers, logs, or scraping?")
+	subprocess.call('clear', shell=True) # clear the screen
+	print("Do you want to talk about feelings, ciphers, logs, scraping, ports, or botnets?")
 	answer=input("")
 	if answer == "feelings":
 		feelings()
@@ -135,3 +195,7 @@ if __name__ == "__main__":
 		logs()
 	elif answer == "scraping":
 		scraping()
+	elif answer == "ports":
+		ports()
+	elif answer == "botnets":
+		ports()
