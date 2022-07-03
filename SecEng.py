@@ -5,15 +5,13 @@ import re
 import socket, subprocess, sys # port scanning
 import pyfiglet  # pretty output
 from datetime import datetime
+import requests
 
 #####################  READ ME  ###########################
 # Security Engineer Playground
 # Each topic is a function
 # Choose a function to begin
 ############################################################  
-
-print("\n\nHello, this is my practice arena\n\n")
-name = input("What's your name? ")
 
 #----------------------- FUNCTION DECLARATIONS -----------------------
 
@@ -96,20 +94,6 @@ def scraping():
 	page = urlopen(url) # Class type: http.client.HTTPResponse
 	# read the bytes (text, newlines, img srcs, etc)
 	html = page.read().decode("utf-8") # Class type: bytes (read) -> str (utf)
-
-	'''
-	# Manual title findin'
-	index after <title>
-	start_index = html.find("<title>") + len("<title>") # or 7
-	print("Starting index of real title (after <title>) " + str(start_index))
-	# ending
-	end_index = html.find("</title>")
-	print("Index at end of title " + str(end_index))
-	print("Length of title is: " + str(end_index-start_index))
-	# print title
-	print("Title: " + str(html[start_index:end_index]))
-	'''
-
 	# find the title
 	# match any text after <title, up to >
 	pattern = "<title.*?>.*?</title.*?>"
@@ -147,37 +131,84 @@ def ports():
 		print("Hostname can't be resolved.  Exiting")
 	except socket.error:
 		sys.exit("Can't connect to server")
-	
-	'''
-	#OLD
-	t1 = datetime.now()
-	#server = input("Enter a host to scan (FQDN): ")
-	server = "T76W9XCDR6.local"
-	ip = socket.gethostbyname(server)
-	try:
-		for port in range (79,81):
-			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # opening a IPv4, TCP socket
-			result = sock.connect_ex((server, port)) # connect to the server port
-			if result ==0:
-				print("Port {}: Open".format(port))
-			sock.close()
-	except KeyboardInterrupt:
-		sys.exit("Ctrl-C entered")
-	except socket.gaierror: # get address info error
-		print("Hostname can't be resolved.  Exiting")
-	except socket.error:
-		sys.exit("Can't connect to server")
-	t2 = datetime.now()
-	t_total = t2-t1
-	print("Hostname: " + server + "\nIP: " + ip + "\nTime to scan: " + str(t_total))
-	'''
 
 #-----------------------
 
 # Botnet function
-def botnets():
+#def botnets():
 	
+#-----------------------
 
+# Prime number function
+def primes():
+	num = int(input("Enter number: "))
+	flag = 0
+	if (num < 2):
+		print("Number must be at least 2 (first prime number)")
+	else:
+		for i in range(2,num):
+			if (num % i) == 0:
+				print(num, "is not prime")
+				flag = 0
+				break
+			elif (num % i) != 0:
+				flag = 1
+				continue
+	if (flag == 1):
+		print(num, "is prime")
+
+#-----------------------
+
+# Word frequency function
+def words():
+	str = input("Enter phrase")
+	str_split = str.split()
+	search_word = input("Word to search? ")
+	i = 0
+	count = 0
+	for word in str_split:
+		if (search_word == str_split[i]):
+			print("Found it at index",i)
+			count += 1
+		i += 1
+	print("Found", count, "occurences of", search_word)	
+
+#-----------------------
+
+# APIs function
+
+def apis():
+	'''
+	GET:    Retrieve data
+	PUT:    Replace data
+	POST:   Create data
+	DELETE: Delete data
+	'''
+	print("HTTP GET request\n")
+	response = requests.get("http://api.open-notify.org/astros.json")
+	print("Here are the astronauts currently in space\n\n",response.json())
+
+	print("HTTP PUT request (update)")
+	resource = requests.put('https://httpbin.org/put', data = {'key':'value'})
+
+	print("HTTP POST request (create new)")
+	response = requests.post("https://httpbin.org/post", data = {'key':'value'})
+
+#-----------------------
+
+# Stack function
+def stacks():
+	stack = []
+	print("Initial stack: ", stack)
+	# PUSH (append)
+	stack.append('a')
+	print("Stack push: ", stack)
+	stack.append(5)
+	print("Stack push: ", stack)
+
+	# POP
+	stack.pop()
+	print("Stack pop: ", stack)
 
 #-----------------------
 
@@ -185,7 +216,7 @@ def botnets():
 
 if __name__ == "__main__":
 	subprocess.call('clear', shell=True) # clear the screen
-	print("Do you want to talk about feelings, ciphers, logs, scraping, ports, or botnets?")
+	print("Do you want to talk about feelings, ciphers, logs, scraping, ports, primes, words, apis, or botnets?")
 	answer=input("")
 	if answer == "feelings":
 		feelings()
@@ -197,5 +228,15 @@ if __name__ == "__main__":
 		scraping()
 	elif answer == "ports":
 		ports()
+	elif answer == "primes":
+		primes()
+	elif answer == "words":
+		words()
+	elif answer == "apis":
+		apis()
+	elif answer == "stacks":
+		stacks()
 	elif answer == "botnets":
 		ports()
+	else:
+		print("Did not enter correct option.  Exiting")
