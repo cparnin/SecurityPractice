@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
-from urllib.request import urlopen
+from multiprocessing.connection import Client
+import sys
 import re
+import requests
 import socket, subprocess, sys # port scanning
 import pyfiglet  # pretty output
 from datetime import datetime
-import requests
+from pexpect import pxssh
+
 
 #####################  READ ME  ###########################
 # Security Engineer Playground
@@ -46,11 +49,8 @@ def feelings():
 # convert chars to Integers/ASCII to get a baseline
 def ciphers():
 	print("Welcome to Caesar's Cipher (I know...I know...the easiest...for now)")
-	print("Enter text to encrypt")
-	text = input()
-	print("Shift amount?")
-	# need to convert user input: str to int
-	shift = int(input())
+	text = input("Enter text to encrypt")
+	shift = int(input("Shift amount?"))
 	cipher = ""
 	# iterate through the text
 	for i in range(len(text)):
@@ -131,11 +131,6 @@ def ports():
 		print("Hostname can't be resolved.  Exiting")
 	except socket.error:
 		sys.exit("Can't connect to server")
-
-#-----------------------
-
-# Botnet function
-#def botnets():
 	
 #-----------------------
 
@@ -212,11 +207,43 @@ def stacks():
 
 #-----------------------
 
+# Botnet function
+def botnets():
+	bot_net = []
+	class Client:
+		def __init__(self, host, user, password): # Class constructor
+			self.host = host
+			self.user = user
+			self.password = password
+			self.session - self.connect()
+		def connect(self): #connect method
+			try: # test connection
+				s = pxssh.pxssh()
+				s.login(self.host, self.user, self.password)
+				return s # if login worked
+			except Exception as e: # if failed
+				print(e)
+				print("Error connecting")
+		def send_command(self, cmd):
+			self.session.sendline(cmd)
+			self.session.prompt()
+			return self.session.before # return results
+		def botnet_command(command): # send command function
+			for client in bot_net:
+				output = client.send_command(command) # get output
+				print("Output from " + client.host)
+				print(output)
+		def add_client(host, user, password): # add client to notnet
+			client = Client(host, user, password)
+			bot_net.append(client) # add client session to botnet
+
+#-----------------------
+
 # Main
 
 if __name__ == "__main__":
 	subprocess.call('clear', shell=True) # clear the screen
-	print("Do you want to talk about feelings, ciphers, logs, scraping, ports, primes, words, apis, or botnets?")
+	print("Do you want to talk about feelings, ciphers, logs, scraping, ports, primes, words, apis, stacks, or botnets?")
 	answer=input("")
 	if answer == "feelings":
 		feelings()
@@ -237,6 +264,9 @@ if __name__ == "__main__":
 	elif answer == "stacks":
 		stacks()
 	elif answer == "botnets":
-		ports()
+		# connection errors - moving on...
+		client = Client("127.0.0.1", "user", "pass")
+		client.add_client()
+		client.botnet_command("ls -al")
 	else:
 		print("Did not enter correct option.  Exiting")
