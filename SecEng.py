@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
-from multiprocessing.connection import Client
 import sys
 import re
 import requests
 import socket, subprocess, sys # port scanning
 import pyfiglet  # pretty output
+import pandas as pd
+import itertools
+import string
 from datetime import datetime
+from multiprocessing.connection import Client
 from pexpect import pxssh
 
 
@@ -239,11 +242,29 @@ def botnets():
 
 #-----------------------
 
+# Brute Force password function
+
+def passwords(guess):
+	chars = string.ascii_lowercase + string.digits # + string.ascii_uppercase
+	attempts = 0
+	for pw_length in range (1,4):
+		print("pw_length is: ", pw_length)
+		for tries in itertools.product(chars, repeat=pw_length):
+			print("tries is: ", tries)
+			attempts += 1
+			tries = ''.join(tries)
+			print("tries JOIN is: ", tries)
+			if tries == guess:
+				return 'password is {}. found in {} guesses.'.format(tries, attempts)
+			print(tries, attempts)
+		
+#-----------------------
+
 # Main
 
 if __name__ == "__main__":
 	subprocess.call('clear', shell=True) # clear the screen
-	print("Do you want to talk about feelings, ciphers, logs, scraping, ports, primes, words, apis, stacks, or botnets?")
+	print("Do you want to talk about feelings, ciphers, logs, scraping, ports, primes, words, apis, stacks, botnets, or passwords?")
 	answer=input("")
 	if answer == "feelings":
 		feelings()
@@ -268,5 +289,7 @@ if __name__ == "__main__":
 		client = Client("127.0.0.1", "user", "pass")
 		client.add_client()
 		client.botnet_command("ls -al")
+	elif answer == "passwords":
+		print(passwords("ab7"))
 	else:
 		print("Did not enter correct option.  Exiting")
