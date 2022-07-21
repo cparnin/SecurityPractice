@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import os
 import re
 import requests
 import socket, subprocess, sys # port scanning
@@ -8,6 +9,7 @@ import pyfiglet  # pretty output
 import pandas as pd
 import itertools
 import string
+import pikepdf
 from datetime import datetime
 from multiprocessing.connection import Client
 from pexpect import pxssh
@@ -257,14 +259,34 @@ def passwords(guess):
 			if tries == guess:
 				return 'password is {}. found in {} guesses.'.format(tries, attempts)
 			print(tries, attempts)
-		
+
+#-----------------------
+
+# PDF metadata function
+
+def pdfs():
+	pdf = pikepdf.open("/Users/parninc/Desktop/ChadParnin-Resume.pdf")
+	docinfo = pdf.docinfo
+	for key, value in docinfo.items():
+		print(key, ":", value)
+
+#-----------------------
+
+# Recover deleted files function
+def recover():
+	print("Not sure where emptied trash lives, so"\
+		" lets recover your Trash items")
+	
+
 #-----------------------
 
 # Main
 
 if __name__ == "__main__":
 	subprocess.call('clear', shell=True) # clear the screen
-	print("Do you want to talk about feelings, ciphers, logs, scraping, ports, primes, words, apis, stacks, botnets, or passwords?")
+	print("Do you want to talk about feelings, ciphers, logs,"\
+		 "scraping, ports, primes, words, apis, stacks,"
+		 " botnets, passwords, pdfs, or recover?")
 	answer=input("")
 	if answer == "feelings":
 		feelings()
@@ -291,5 +313,9 @@ if __name__ == "__main__":
 		client.botnet_command("ls -al")
 	elif answer == "passwords":
 		print(passwords("ab7"))
+	elif answer == "pdfs":
+		pdfs()
+	elif answer == "recover":
+		recover()
 	else:
 		print("Did not enter correct option.  Exiting")
