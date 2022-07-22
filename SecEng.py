@@ -31,7 +31,6 @@ def feelings():
 	message = input(">")
 	# split on the space
 	words = message.split(' ')
-	print("Printing word list")
 	# emoji dictionary
 	emojis = {
 		"happy":"😀",
@@ -172,7 +171,6 @@ def words():
 			count += 1
 		i += 1
 	print("Found", count, "occurences of", search_word)	
-
 #-----------------------
 
 # APIs function
