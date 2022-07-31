@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import sys
-import os
 import re
 import requests
 import socket, subprocess, sys # port scanning
@@ -27,8 +26,7 @@ from pexpect import pxssh
 
 def feelings():
 	# initiate the conversation
-	print("How do you feel today? (I feel happy/sad)")
-	message = input(">")
+	message = input("How do you feel today? (I feel happy/sad)")
 	# split on the space
 	words = message.split(' ')
 	# emoji dictionary
@@ -52,7 +50,7 @@ def feelings():
 # ord() converts a Character to an Integer (ASCII)
 # convert chars to Integers/ASCII to get a baseline
 def ciphers():
-	print("Welcome to Caesar's Cipher (I know...I know...the easiest...for now)")
+	print("Welcome to Caesar's Cipher (easiest)")
 	text = input("Enter text to encrypt")
 	shift = int(input("Shift amount?"))
 	cipher = ""
